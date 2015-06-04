@@ -1,1 +1,3 @@
 need loop backgroundSprite
+
+game restart after game over
