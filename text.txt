@@ -1,3 +1,8 @@
 need loop backgroundSprite
 
 game restart after game over
+
+
+- checkCollision.right/left/top/bottom
+- 
+
