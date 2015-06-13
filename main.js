@@ -25,6 +25,7 @@ var crateHeight = 25;
 var crateImage;
 var crateSprite = [];
 var CRATE_SPEED = -150;
+var crateNum = 100;
 
 var score = 0;
 
@@ -47,7 +48,6 @@ var createSpriteImage = function(width, height, color) {
 
 
 var preload = function () {
-    debugger
 
     game.stage.backgroundColor = '#666699';
     
@@ -60,8 +60,7 @@ var preload = function () {
 
 
 var createSprite = function (xPos, yPos, spriteImage) {
-    debugger
-    
+
     var sprite = game.add.sprite(xPos, yPos, spriteImage);
    
     game.physics.enable(sprite, Phaser.Physics.ARCADE);
@@ -71,16 +70,14 @@ var createSprite = function (xPos, yPos, spriteImage) {
 
 
 var create = function () {
-    debugger
-    
     backgroundSprite = game.add.sprite(0, 0, backgroundImage);
     
     playerSprite = createSprite(1, HEIGHT - (playerHeight + groundHeight), playerImage);
      
-    for (var count = 0; count < 5; count++) {
-        crateSprite[count] = createSprite(generateRandomNumBetween(500, 900), HEIGHT - (crateHeight + groundHeight), crateImage);
+    for (var count = 0; count < crateNum; count++) {
+        crateSprite[count] = createSprite(generateRandomNumBetween(500, 900), generateRandomNumBetween(1, 595), crateImage);
         crateSprite[count].body.velocity.x = CRATE_SPEED; // CONSTANT VELOCITY
-        
+
     };
 
     groundSprite = createSprite(0, HEIGHT - groundHeight, groundImage); // physics not enabled, yay!
@@ -88,7 +85,8 @@ var create = function () {
     // Physics:
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = 100;
-
+    groundSprite.body.immovable = true;
+    groundSprite.body.velocity.setTo(0, 0);
 
     // Sets bounds for sprites. 
     playerSprite.body.collideWorldBounds = true;
@@ -98,8 +96,7 @@ var create = function () {
 
 
 var update = function () {
-    debugger    
-    
+
     game.physics.arcade.collide(playerSprite, crateSprite[0], collisionHandler, null, this);
     game.physics.arcade.collide(playerSprite, crateSprite[1], collisionHandler, null, this);
     game.physics.arcade.collide(playerSprite, crateSprite[2], collisionHandler, null, this);
@@ -130,10 +127,9 @@ var update = function () {
             // playerSprite.body.angularVelocity = 0;
         }
     
-    for (var count = 0; count < 5; count++) {
+    for (var count = 0; count < crateNum; count++) {
         if (crateSprite[count].x < -crateWidth) {
-            debugger
-            crateSprite[count].x = WIDTH + crateWidth;
+=            crateSprite[count].x = WIDTH + crateWidth;
             crateSprite[count].y = generateRandomNumBetween(1, 595);
         }
         if (playerSprite.x > crateSprite[count].x && playerSprite.x < crateSprite[count].x + 5) {
@@ -152,14 +148,7 @@ var collisionHandler = function(obj1, obj2) {
 
 
 var render = function () {
-    game.debug.text("Score = " + score, WIDTH / 2, 25, '#00ff00');
-    game.debug.text("playerSprite.y = " + playerSprite.y, WIDTH/2, 45, '#00ff00');
-    game.debug.text("crateSprite[0].x = " + crateSprite[0].x, WIDTH/2, 65, '#00ff00');
-    game.debug.text("crateSprite[1].x = " + crateSprite[1].x, WIDTH/2, 85, '#00ff00');
-    game.debug.text("crateSprite[2].x = " + crateSprite[2].x, WIDTH/2, 105, '#00ff00');
-    game.debug.text("crateSprite[3].x = " + crateSprite[3].x, WIDTH/2, 125, '#00ff00');
-    game.debug.text("crateSprite[4].x = " + crateSprite[4].x, WIDTH/2, 145, '#00ff00');
-
+    game.debug.text("Score = " + score, WIDTH / 2.5, 30, '#00ff00');
 }
 
 
