@@ -129,7 +129,7 @@ var update = function () {
     
     for (var count = 0; count < crateNum; count++) {
         if (crateSprite[count].x < -crateWidth) {
-=            crateSprite[count].x = WIDTH + crateWidth;
+            crateSprite[count].x = WIDTH + crateWidth;
             crateSprite[count].y = generateRandomNumBetween(1, 595);
         }
         if (playerSprite.x > crateSprite[count].x && playerSprite.x < crateSprite[count].x + 5) {
