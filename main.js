@@ -37,7 +37,6 @@ var score = 0;
 var scoreTxt;
 
 
-debugger
 var generateRandomNumberWithMax = function(maxNumber) {
     debugger
     var randomNumber = Math.floor(Math.random() * (maxNumber + 1));
@@ -81,24 +80,18 @@ var preload = function () {
 
 var createSprite = function (xPos, yPos, spriteImage) {
     
-    var spriteName = game.add.sprite(xPos, yPos, spriteImage);
+    var sprite = game.add.sprite(xPos, yPos, spriteImage);
    
-    game.physics.enable(spriteName, Phaser.Physics.ARCADE);
+    game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
-    return spriteName;
+    return sprite;
 }
 
-    var createCrates = function(numCrates) {
-        for (var num = 0; num < numCrates; num++) {
-            createSprite(generateRandomNumberWithMax(WIDTH - crateWidth), HEIGHT - (crateHeight + groundHeight), crateImage);
-            crateSprite.body.velocity.x = CRATE_SPEED; // CONSTANT VELOCITY
-            if (crateSprite.x < -crateWidth) {
-                debugger
-                crateSprite.x = WIDTH + crateWidth;
-                crateSprite.y = genRandomNumberForCrateWithMax(595); // Math.floor(Math.random() * 595);
-            }
-        }
+var createCrates = function(numCrates) {
+    for (var num = 0; num < numCrates; num++) {
+        createSprite(generateRandomNumberWithMax(WIDTH - crateWidth), HEIGHT - (crateHeight + groundHeight), crateImage);
     }
+}
 
 var create = function () {
     debugger
@@ -108,9 +101,16 @@ var create = function () {
     playerSprite = createSprite(1, HEIGHT - (playerHeight + groundHeight), playerImage);
     
     crateSprite = createSprite(900, HEIGHT - (crateHeight + groundHeight), crateImage);
+    crateSprite.body.velocity.x = CRATE_SPEED; // CONSTANT VELOCITY
+    if (crateSprite.x < -crateWidth) {
+        debugger
+        crateSprite.x = WIDTH + crateWidth;
+        crateSprite.y = genRandomNumberForCrateWithMax(595); // Math.floor(Math.random() * 595);
+    }
 
-    crateSprite = createCrates(5);
-    
+
+    // crateSprite = createCrates(5);
+    // 
     groundSprite = createSprite(0, HEIGHT - groundHeight, groundImage);
     
     // Physics:
@@ -156,12 +156,12 @@ var update = function () {
     // }
     
     
-    // crateSprite.body.velocity.x = CRATE_SPEED; // CONSTANT VELOCITY
-    // if (crateSprite.x < -crateWidth) {
-    //     debugger
-    //     crateSprite.x = WIDTH + crateWidth;
-    //     crateSprite.y = generateRandomNumberWithMax(595); // Math.floor(Math.random() * 595);
-    // }
+    crateSprite.body.velocity.x = CRATE_SPEED; // CONSTANT VELOCITY
+    if (crateSprite.x < -crateWidth) {
+        debugger
+        crateSprite.x = WIDTH + crateWidth;
+        crateSprite.y = generateRandomNumberWithMax(595); // Math.floor(Math.random() * 595);
+    }
 
     
     groundSprite.body.velocity.x = GROUND_SPEED;
