@@ -17,8 +17,8 @@ var groundImage;
 var groundSprite;
 var GROUND_SPEED = 0;
 
-var playerWidth = WIDTH / 10;
-var playerHeight = HEIGHT / 8;
+var playerWidth = 20;
+var playerHeight = 20
 var playerImage;
 var playerSprite;
 var PLAYER_SPEED = 2;
@@ -27,7 +27,7 @@ var PLAYER_JUMP = 5;
 var crateWidth = 25;
 var crateHeight = 25;
 var crateImage;
-var crateSprite;
+var crateSprite = [];
 var CRATE_SPEED = -150;
 
 var crateImage2;
@@ -43,10 +43,11 @@ var generateRandomNumberWithMax = function(maxNumber) {
     return randomNumber;
 };
 
-var genRandomNumberForCrateWithMax = function(maxNumber) {
-    debugger
-    var randomNumber = 500 + Math.floor(Math.random() * (maxNumber + 1));
-    return randomNumber;
+
+// Returns a random integer between min and max
+// Using Math.round() will give you a non-uniform distribution!
+var getRandomInt = function(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 
@@ -87,11 +88,6 @@ var createSprite = function (xPos, yPos, spriteImage) {
     return sprite;
 }
 
-var createCrates = function(numCrates) {
-    for (var num = 0; num < numCrates; num++) {
-        createSprite(generateRandomNumberWithMax(WIDTH - crateWidth), HEIGHT - (crateHeight + groundHeight), crateImage);
-    }
-}
 
 var create = function () {
     debugger
@@ -99,18 +95,13 @@ var create = function () {
     backgroundSprite = game.add.sprite(0, 0, backgroundImage);
     
     playerSprite = createSprite(1, HEIGHT - (playerHeight + groundHeight), playerImage);
-    
-    crateSprite = createSprite(900, HEIGHT - (crateHeight + groundHeight), crateImage);
-    crateSprite.body.velocity.x = CRATE_SPEED; // CONSTANT VELOCITY
-    if (crateSprite.x < -crateWidth) {
-        debugger
-        crateSprite.x = WIDTH + crateWidth;
-        crateSprite.y = genRandomNumberForCrateWithMax(595); // Math.floor(Math.random() * 595);
-    }
+     
+    for (var count = 0; count < 5; count++) {
+        crateSprite[count] = createSprite(getRandomInt(500, 900), HEIGHT - (crateHeight + groundHeight), crateImage);
+        crateSprite[count].body.velocity.x = CRATE_SPEED; // CONSTANT VELOCITY
+        
+    };
 
-
-    // crateSprite = createCrates(5);
-    // 
     groundSprite = createSprite(0, HEIGHT - groundHeight, groundImage);
     
     // Physics:
@@ -129,8 +120,17 @@ var create = function () {
 var update = function () {
     debugger    
     
-    game.physics.arcade.collide(playerSprite, crateSprite, collisionHandler, null, this);
-    game.physics.arcade.collide(crateSprite, groundSprite);
+    game.physics.arcade.collide(playerSprite, crateSprite[0], collisionHandler, null, this);
+    game.physics.arcade.collide(playerSprite, crateSprite[1], collisionHandler, null, this);
+    game.physics.arcade.collide(playerSprite, crateSprite[2], collisionHandler, null, this);
+    game.physics.arcade.collide(playerSprite, crateSprite[3], collisionHandler, null, this);
+    game.physics.arcade.collide(playerSprite, crateSprite[4], collisionHandler, null, this);
+
+    game.physics.arcade.collide(crateSprite[0], groundSprite);
+    game.physics.arcade.collide(crateSprite[1], groundSprite);
+    game.physics.arcade.collide(crateSprite[2], groundSprite);
+    game.physics.arcade.collide(crateSprite[3], groundSprite);
+    game.physics.arcade.collide(crateSprite[4], groundSprite);
     game.physics.arcade.collide(playerSprite, groundSprite);
     
   
@@ -150,19 +150,18 @@ var update = function () {
             // playerSprite.body.angularVelocity = 0;
         }
     
-    // if (playerSprite.x > crateSprite.x && playerSprite.x < crateSprite.x + 5) {
-    //     score = score + 1;
-    //     // playerSprite.y = generateRandomNumberWithMax();
-    // }
     
-    
-    crateSprite.body.velocity.x = CRATE_SPEED; // CONSTANT VELOCITY
-    if (crateSprite.x < -crateWidth) {
-        debugger
-        crateSprite.x = WIDTH + crateWidth;
-        crateSprite.y = generateRandomNumberWithMax(595); // Math.floor(Math.random() * 595);
+    for (var count = 0; count < 5; count++) {
+        if (crateSprite[count].x < -crateWidth) {
+            debugger
+            crateSprite[count].x = WIDTH + crateWidth;
+            crateSprite[count].y = generateRandomNumberWithMax(595);
+        }
+        if (playerSprite.x > crateSprite[count].x && playerSprite.x < crateSprite[count].x + 5) {
+        score = score + 1;
+        // playerSprite.y = generateRandomNumberWithMax();
+        }
     }
-
     
     groundSprite.body.velocity.x = GROUND_SPEED;
 
@@ -182,10 +181,11 @@ var render = function () {
     // game.debug.text("background.x = " + backgroundSprite.x, 500, 10, '#00ff00');
     game.debug.text("Score = " + score, WIDTH / 2, 25, '#00ff00');
     game.debug.text("playerSprite.y = " + playerSprite.y, WIDTH/2, 45, '#00ff00');
-    // game.debug.text("crateSprite.y = " + crateSprite.y, WIDTH/2, 65, '#00ff00');
-    // game.debug.text("crateSprite.x = " + crateSprite.x, WIDTH/2, 85, '#00ff00');
-    // game.debug.text("crateSprite.velocity.x = " + crateSprite.body.velocity.x, WIDTH/2, 105, '#00ff00');
-
+    game.debug.text("crateSprite[0].x = " + crateSprite[0].x, WIDTH/2, 65, '#00ff00');
+    game.debug.text("crateSprite[1].x = " + crateSprite[1].x, WIDTH/2, 85, '#00ff00');
+    game.debug.text("crateSprite[2].x = " + crateSprite[2].x, WIDTH/2, 105, '#00ff00');
+    game.debug.text("crateSprite[3].x = " + crateSprite[3].x, WIDTH/2, 125, '#00ff00');
+    game.debug.text("crateSprite[4].x = " + crateSprite[4].x, WIDTH/2, 145, '#00ff00');
 
 }
 
