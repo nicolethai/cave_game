@@ -96,20 +96,13 @@ var create = function () {
 
 
 var update = function () {
-
-    game.physics.arcade.collide(playerSprite, crateSprite[0], collisionHandler, null, this);
-    game.physics.arcade.collide(playerSprite, crateSprite[1], collisionHandler, null, this);
-    game.physics.arcade.collide(playerSprite, crateSprite[2], collisionHandler, null, this);
-    game.physics.arcade.collide(playerSprite, crateSprite[3], collisionHandler, null, this);
-    game.physics.arcade.collide(playerSprite, crateSprite[4], collisionHandler, null, this);
-
-    game.physics.arcade.collide(crateSprite[0], groundSprite);
-    game.physics.arcade.collide(crateSprite[1], groundSprite);
-    game.physics.arcade.collide(crateSprite[2], groundSprite);
-    game.physics.arcade.collide(crateSprite[3], groundSprite);
-    game.physics.arcade.collide(crateSprite[4], groundSprite);
-    game.physics.arcade.collide(playerSprite, groundSprite);
     
+    game.physics.arcade.collide(playerSprite, groundSprite);
+        
+    for (var count = 0; count < crateNum; count++) {
+        game.physics.arcade.collide(playerSprite, crateSprite[count], collisionHandler, null, this);
+        game.physics.arcade.collide(crateSprite[count], groundSprite);
+    }
   
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
         playerSprite.y -= PLAYER_JUMP;
